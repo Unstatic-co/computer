@@ -6,6 +6,8 @@ import 'compute_api/compute_api.dart';
 class Computer {
   final _computeDelegate = ComputeAPI();
 
+  ComputeAPI get computeApi => _computeDelegate;
+
   /// Returns `true` if `Computer` turned on and `false` otherwise
   bool get isRunning => _computeDelegate.isRunning;
 
