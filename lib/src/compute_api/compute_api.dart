@@ -16,8 +16,19 @@ class ComputeAPI {
   final _activeTaskCompleters = <Capability, Completer>{};
 
   late Logger _logger;
+  final callBacks = <Function>[];
+
+  ComputeAPI();
 
   bool isRunning = false;
+
+  void addCallback(Function callback) {
+    callBacks.add(callback);
+  }
+
+  void clearCallback() {
+    callBacks.clear();
+  }
 
   Future<void> turnOn({
     int workersCount = 2,
@@ -107,6 +118,10 @@ class ComputeAPI {
       _logger.log("Finished task on worker, queue isn't empty, pick task");
       final task = _taskQueue.removeFirst();
       worker.execute(task);
+    } else {
+      callBacks.forEach((callBack) {
+        callBack.call(true);
+      });
     }
   }
 
@@ -118,6 +133,10 @@ class ComputeAPI {
       _logger.log("Finished task on worker, queue isn't empty, pick task");
       final task = _taskQueue.removeFirst();
       worker.execute(task);
+    } else {
+      callBacks.forEach((callBack) {
+        callBack.call(false);
+      });
     }
   }
 }
